@@ -2,10 +2,18 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Class User
+ * @package App
+ * @property-read Book[]|Collection $books
+ * @property string $name
+ * @property string $email
+ */
 class User extends Authenticatable
 {
     use Notifiable;
@@ -36,4 +44,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Relations to created books
+     * @return HasMany
+     */
+    public function books(): HasMany
+    {
+        return $this->hasMany(Book::class);
+    }
 }
