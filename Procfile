@@ -1,1 +1,1 @@
-web: vendor/bin/bookBuilder public/
+web: vendor/bin/heroku-php-apache2 public/
