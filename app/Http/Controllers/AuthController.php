@@ -7,6 +7,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/**
+ * Class AuthController
+ * @package App\Http\Controllers
+ */
 class AuthController extends Controller
 {
     /**
@@ -20,7 +24,7 @@ class AuthController extends Controller
             'password' => $request->password,
         ]);
 
-        $token = auth()->login($user);
+        $token = \auth()->login($user);
 
         return $this->respondWithToken($token);
     }
@@ -30,10 +34,10 @@ class AuthController extends Controller
      */
     public function login(): JsonResponse
     {
-        $credentials = request(['email', 'password']);
+        $credentials = \request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json([], Response::HTTP_UNAUTHORIZED);
+        if (! $token = \auth()->attempt($credentials)) {
+            return \response()->json([], Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);
@@ -44,9 +48,9 @@ class AuthController extends Controller
      */
     public function logout(): JsonResponse
     {
-        auth()->logout();
+        \auth()->logout();
 
-        return response()->json();
+        return \response()->json();
     }
 
     /**
@@ -55,7 +59,7 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token): JsonResponse
     {
-        return response()->json([
+        return \response()->json([
             'access_token' => $token,
             'token_type'   => 'bearer',
             'expires_in'   => auth()->factory()->getTTL() * 60

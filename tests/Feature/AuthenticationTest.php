@@ -16,7 +16,7 @@ class AuthenticationTest extends TestCase
         parent::setUp();
 
         $user = new User([
-            'email'    => 'test@email.com',
+            'email' => 'test@email.com',
             'password' => '123456'
         ]);
 
@@ -27,8 +27,8 @@ class AuthenticationTest extends TestCase
     public function it_will_register_a_user(): void
     {
         $response = $this->post('api/register', [
-            'email'    => 'test2@email.com',
-            'password' => '123456'
+            'email' => 'test2@email.com',
+            'password' => '123456',
         ]);
 
         $response->assertJsonStructure([
@@ -42,14 +42,14 @@ class AuthenticationTest extends TestCase
     public function it_will_log_a_user_in(): void
     {
         $response = $this->post('api/login', [
-            'email'    => 'test@email.com',
-            'password' => '123456'
+            'email' => 'test@email.com',
+            'password' => '123456',
         ]);
 
         $response->assertJsonStructure([
             'access_token',
             'token_type',
-            'expires_in'
+            'expires_in',
         ]);
     }
 
@@ -57,8 +57,8 @@ class AuthenticationTest extends TestCase
     public function it_will_not_log_an_invalid_user_in(): void
     {
         $response = $this->post('api/login', [
-            'email'    => 'test@email.com',
-            'password' => 'notlegitpassword'
+            'email' => 'test@email.com',
+            'password' => 'notlegitpassword',
         ]);
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @package App
  * @property string $name
- * @property-read User $user
  * @property-read Chapter[]|Collection $chapters
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Book newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Book newQuery()
@@ -22,21 +21,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $archived_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users
  */
 class Book extends Model
 {
     /** @var array */
     protected $fillable = [
-        'name',
+        'name', 'archived_at',
     ];
 
     /**
-     * Relation to owner of the book
-     * @return BelongsTo
+     * Relation to owners of the book
+     * @return BelongsToMany
      */
-    public function user(): BelongsTo
+    public function users(): BelongsToMany
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class);
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -13,7 +13,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  *
  * @package App
  * @property-read Book[]|Collection $books
- * @property string $name
  * @property string $email
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-write mixed $password
@@ -26,6 +25,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string|null $api_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $remember_token
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Book[] $archivedBooks
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -60,11 +61,20 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Relations to created books
-     * @return HasMany
+     * @return BelongsToMany
      */
-    public function books(): HasMany
+    public function books(): BelongsToMany
     {
-        return $this->hasMany(Book::class);
+        return $this->belongsToMany(Book::class)->whereNull('archived_at');
+    }
+
+    /**
+     * Relations to archived books
+     * @return BelongsToMany
+     */
+    public function archivedBooks(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class)->whereNotNull('archived_at');
     }
 
     /**

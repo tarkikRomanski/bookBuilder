@@ -4,83 +4,86 @@ namespace App\Http\Controllers;
 
 use App\Book;
 use App\Http\Requests\BookRequest;
-use Illuminate\Http\RedirectResponse;
+use App\Http\Resources\BookResource;
+use App\Services\BooksService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Exception;
 
 class BookController extends Controller
 {
+    /** @var BooksService */
+    private $booksService;
+
     /**
-     * Display a listing of the resource.
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * BookController constructor.
+     * @param BooksService $booksService
      */
-    public function index()
+    public function __construct(BooksService $booksService)
     {
-        return view('books.index');
+        $this->booksService = $booksService;
     }
 
     /**
-     * Show the form for creating a new resource.
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function create()
-    {
-        return view('books.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
+     * Creates a new book
      * @param BookRequest $request
-     * @return void
+     * @return JsonResponse
      */
-    public function store(BookRequest $request)
+    public function store(BookRequest $request): JsonResponse
     {
-        //
+        $createdBook = $this->booksService->createBook($request->get('name'));
+
+        return $createdBook
+            ? \response()->json(['book' => new BookResource($createdBook)])
+            : \response()->json([], Response::HTTP_BAD_REQUEST);
     }
 
     /**
-     * Display the specified resource.
+     * Returns list of the books
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        /** todo: Add functionality */
+        return \response()->json([], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Returns the book
      * @param Book $book
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return JsonResponse
      */
-    public function show(Book $book)
+    public function show(Book $book): JsonResponse
     {
-        return view('books.preview', compact($book));
+        return \response()->json(['book' => new BookResource($book)]);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     * @param Book $book
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function edit(Book $book)
-    {
-        return view('books.edit', compact($book));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
+     * Updates the book
      * @param BookRequest $request
      * @param Book $book
-     * @return void
+     * @return JsonResponse
      */
-    public function update(BookRequest $request, Book $book)
+    public function update(BookRequest $request, Book $book): JsonResponse
     {
-        //
+        return $this->booksService->updateBook($book, $request->get('name'))
+            ? \response()->json()
+            : \response()->json([], Response::HTTP_BAD_REQUEST);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deletes the book
      * @param Book $book
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function destroy(Book $book): RedirectResponse
+    public function destroy(Book $book): JsonResponse
     {
         try {
+            $deletedId = $book->id;
             $book->delete();
-            return redirect()->route('books.index');
-        } catch (\Exception $e) {
-            return redirect()->route('books.index');
+            return \response()->json(['deleted_id' => $deletedId]);
+        } catch (Exception $e) {
+            return \response()->json([], Response::HTTP_BAD_REQUEST);
         }
     }
 }
