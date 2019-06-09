@@ -9,10 +9,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Book
+ *
  * @package App
  * @property string $name
  * @property-read User $user
  * @property-read Chapter[]|Collection $chapters
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Book newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Book newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Book query()
+ * @mixin \Eloquent
+ * @property int $id
+ * @property int $user_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  */
 class Book extends Model
 {

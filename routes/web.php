@@ -1,11 +1,5 @@
 <?php
 
-Route::get('/', function () {
+Route::get('/', static function () {
     return view('welcome');
-});
-
-Auth::routes();
-
-Route::middleware('auth')->group(function () {
-    Route::resource('books', 'BookController');
 });

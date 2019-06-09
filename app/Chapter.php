@@ -7,11 +7,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Chapter
+ *
  * @package App
  * @property string $title
  * @property string $content
  * @property int $order
  * @property-read Book $book
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Chapter newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Chapter newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Chapter query()
+ * @mixin \Eloquent
+ * @property int $id
+ * @property int $book_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  */
 class Chapter extends Model
 {
