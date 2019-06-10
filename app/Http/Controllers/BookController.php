@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Book;
 use App\Http\Requests\BookRequest;
+use App\Http\Requests\BooksListRequest;
 use App\Http\Resources\BookResource;
+use App\Http\Resources\BooksCollection;
 use App\Services\BooksService;
+use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Exception;
@@ -34,18 +37,23 @@ class BookController extends Controller
         $createdBook = $this->booksService->createBook($request->get('name'));
 
         return $createdBook
-            ? \response()->json(['book' => new BookResource($createdBook)])
+            ? \response()->json(['book' => new BookResource($createdBook)], Response::HTTP_CREATED)
             : \response()->json([], Response::HTTP_BAD_REQUEST);
     }
 
     /**
      * Returns list of the books
+     * @param BooksListRequest $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(BooksListRequest $request): JsonResponse
     {
-        /** todo: Add functionality */
-        return \response()->json([], Response::HTTP_BAD_REQUEST);
+        /** @var User $user */
+        $user = \auth()->user();
+        $books = $request->get('archived', false) ? $user->archivedBooks() : $user->books();
+        $books->orderBy('created_at', $request->get('order', 'asc'));
+
+        return \response()->json(BooksCollection::make($books->paginate()));
     }
 
     /**
@@ -85,5 +93,29 @@ class BookController extends Controller
         } catch (Exception $e) {
             return \response()->json([], Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    /**
+     * Archives the book
+     * @param Book $book
+     * @return JsonResponse
+     */
+    public function archive(Book $book): JsonResponse
+    {
+        return $this->booksService->archiveBook($book)
+            ? \response()->json(['book' => new BookResource($book)])
+            : \response()->json([], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Unarchives the book
+     * @param Book $book
+     * @return JsonResponse
+     */
+    public function unarchive(Book $book): JsonResponse
+    {
+        return $this->booksService->unarchiveBook($book)
+            ? \response()->json(['book' => new BookResource($book)])
+            : \response()->json([], Response::HTTP_BAD_REQUEST);
     }
 }
