@@ -51,7 +51,7 @@ class BookController extends Controller
         /** @var User $user */
         $user = \auth()->user();
         $books = $request->get('archived', false) ? $user->archivedBooks() : $user->books();
-        $books->orderBy('created_at', $request->get('order', 'asc'));
+        $books->orderBy('created_at', $request->get('order', 'desc'));
 
         return \response()->json(BooksCollection::make($books->paginate()));
     }

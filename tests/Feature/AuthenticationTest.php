@@ -11,6 +11,7 @@ class AuthenticationTest extends TestCase
 {
     use DatabaseMigrations;
 
+    /** @var User */
     private $user;
 
     /**
@@ -59,6 +60,7 @@ class AuthenticationTest extends TestCase
         );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors('email')
             ->assertJsonFragment([
                 'email' => ['The email has already been taken.'],
             ]);
@@ -79,6 +81,7 @@ class AuthenticationTest extends TestCase
         );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors('email')
             ->assertJsonFragment([
                 'email' => ['The email must be a valid email address.'],
             ]);
@@ -99,6 +102,7 @@ class AuthenticationTest extends TestCase
         );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors('password')
             ->assertJsonFragment([
                 'password' => ['The password must be at least 6 characters.'],
             ]);
