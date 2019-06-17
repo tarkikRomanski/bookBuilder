@@ -19,6 +19,7 @@ class CreateChaptersTable extends Migration
             $table->foreign('book_id')->references('id')->on('books');
             $table->string('title');
             $table->text('content');
+            $table->boolean('show')->default(true);
             $table->tinyInteger('order');
             $table->timestamps();
         });
