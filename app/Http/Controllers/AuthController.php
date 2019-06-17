@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthRequest;
 use App\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
@@ -14,10 +14,10 @@ use Illuminate\Http\Response;
 class AuthController extends Controller
 {
     /**
-     * @param Request $request
+     * @param AuthRequest $request
      * @return JsonResponse
      */
-    public function register(Request $request): JsonResponse
+    public function register(AuthRequest $request): JsonResponse
     {
         $user = User::create([
             'email'    => $request->email,
