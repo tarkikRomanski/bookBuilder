@@ -1,1 +1,11 @@
-<app-book-list></app-book-list>
+<button *ngIf="!activeList" mat-button color="accent" (click)="backToList()">
+  Back
+</button>
+
+<mat-card>
+  <app-book-list *ngIf="activeList" (showBook)="showBook($event)"></app-book-list>
+
+  <app-book-show *ngIf="!activeList && book" [book]="book"></app-book-show>
+
+  <h1 *ngIf="!activeList && !book">Not found data</h1>
+</mat-card>

@@ -1,5 +1,5 @@
 <mat-card>
-  <img mat-card-md-image [src]="getCorrectBase64(book.screen)" [alt]="book.title">
+  <img mat-card-lg-image [src]="getCorrectBase64(book.screen)" [alt]="book.title">
 
   <mat-card-title>
     {{ book.title }}
@@ -12,6 +12,4 @@
   <mat-card-content>
     {{ book.description }}
   </mat-card-content>
-
-  <button mat-button (click)="giveId.emit(book.uid)" color="primary">Open</button>
 </mat-card>

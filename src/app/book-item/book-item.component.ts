@@ -9,9 +9,9 @@ import { BookModel } from '../../models/book.model';
 export class BookItemComponent {
   @Input() book: BookModel;
 
-  @Output('updateProgress') updateProgressEmmiter = new EventEmitter<number>();
+  @Output() giveId = new EventEmitter<number>();
 
-  updateProgress(progress: number) {
-    this.updateProgressEmmiter.emit(progress);
+  getCorrectBase64(base64: string): string {
+    return `data:image/jpeg;base64,${base64}`;
   }
 }

@@ -1,8 +1,3 @@
 <h1>Book List</h1>
 
-<ul>
-  <app-book-item *ngFor="let book of books" [book]="book" (updateProgress)="updateProgress($event)"></app-book-item>
-</ul>
-<ul *ngIf="!active">
-  <app-book-item *ngFor="let book of books" [book]="book" (updateProgress)="updateProgress($event)"></app-book-item>
-</ul>
+<app-book-item *ngFor="let book of books" [book]="book" (giveId)="processBookById($event)"></app-book-item>
