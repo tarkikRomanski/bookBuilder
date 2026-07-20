@@ -4,6 +4,7 @@ import { BookModel } from '../../models/book.model';
 @Component({
   selector: 'app-book-show',
   templateUrl: './book-show.component.html',
+  standalone: false
 })
 export class BookShowComponent {
   constructor() { }

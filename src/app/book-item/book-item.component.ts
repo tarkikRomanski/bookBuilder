@@ -4,7 +4,8 @@ import { BookModel } from '../../models/book.model';
 @Component({
   selector: 'app-book-item',
   templateUrl: './book-item.component.html',
-  styleUrls: [ './book-item.component.scss' ]
+  styleUrls: [ './book-item.component.scss' ],
+  standalone: false
 })
 export class BookItemComponent {
   @Input() book: BookModel;

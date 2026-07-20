@@ -3,7 +3,8 @@ import { BookModel } from '../../models/book.model';
 
 @Component({
   selector: 'app-book-list',
-  templateUrl: './book-list.component.html'
+  templateUrl: './book-list.component.html',
+  standalone: false
 })
 export class BookListComponent {
   books: BookModel[] = [
