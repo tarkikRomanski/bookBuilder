@@ -1,11 +1,77 @@
-<button *ngIf="!activeList" mat-button color="accent" (click)="backToList()">
-  Back
-</button>
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 glass-nav px-4 lg:px-8 py-3 transition-all duration-300">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <!-- Brand Logo & Title -->
+    <div class="flex items-center gap-3 cursor-pointer" (click)="backToList()">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 via-amber-500 to-amber-300 flex items-center justify-center shadow-lg shadow-amber-500/20">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="font-serif text-2xl font-bold tracking-tight text-pearl leading-none flex items-center gap-2">
+          BookBuilder
+          <span class="text-xs font-sans font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">PRO</span>
+        </h1>
+        <p class="text-xs text-slate-400 font-sans tracking-wide">Literary Studio & Progress Tracker</p>
+      </div>
+    </div>
 
-<mat-card>
-  <app-book-list *ngIf="activeList" (showBook)="showBook($event)"></app-book-list>
+    <!-- Actions & Stats Badges -->
+    <div class="flex items-center gap-3">
+      <button *ngIf="!activeList" 
+              (click)="backToList()" 
+              class="ghost-btn text-sm flex items-center gap-2 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span>Back to Library</span>
+      </button>
 
-  <app-book-show *ngIf="!activeList && book" [book]="book"></app-book-show>
+      <div class="hidden sm:flex items-center gap-2 bg-slate-900/60 border border-slate-800 rounded-full px-3 py-1.5 text-xs text-slate-300">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Studio Active</span>
+      </div>
+    </div>
+  </div>
+</header>
 
-  <h1 *ngIf="!activeList && !book">Not found data</h1>
-</mat-card>
+<!-- Main App Content -->
+<main class="max-w-7xl mx-auto px-4 lg:px-8 py-8 min-h-[calc(100vh-140px)]">
+  <!-- Book List Component -->
+  <div *ngIf="activeList" class="animate-fade-in">
+    <app-book-list (showBook)="showBook($event)"></app-book-list>
+  </div>
+
+  <!-- Book Detail Reader Show Component -->
+  <div *ngIf="!activeList && book" class="animate-fade-in">
+    <app-book-show [book]="book" (progressUpdated)="onBookProgressUpdated($event)" (backRequested)="backToList()"></app-book-show>
+  </div>
+
+  <!-- Fallback if Not Found -->
+  <div *ngIf="!activeList && !book" class="glass-card p-12 text-center max-w-lg mx-auto my-16 animate-fade-in">
+    <div class="w-16 h-16 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mx-auto mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+    </div>
+    <h2 class="font-serif text-2xl font-bold text-pearl mb-2">Book Not Found</h2>
+    <p class="text-slate-400 text-sm mb-6">The requested book record could not be loaded or located in the library catalog.</p>
+    <button (click)="backToList()" class="gold-btn mx-auto">Return to Library</button>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-800/80 bg-obsidian py-8 px-4 text-center text-xs text-slate-500">
+  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <span class="font-serif font-bold text-amber-500/80 text-sm">BookBuilder Studio</span>
+      <span>&copy; 2026. All rights reserved.</span>
+    </div>
+    <div class="flex items-center gap-4 text-slate-400">
+      <span>Literary Design System</span>
+      <span>•</span>
+      <span>Angular 19</span>
+    </div>
+  </div>
+</footer>

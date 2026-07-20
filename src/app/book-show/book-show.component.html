@@ -1,15 +1,251 @@
-<mat-card>
-  <img mat-card-lg-image [src]="getCorrectBase64(book.screen)" [alt]="book.title">
+<div *ngIf="book" class="space-y-8 animate-fade-in">
 
-  <mat-card-title>
-    {{ book.title }}
-  </mat-card-title>
+  <!-- Top Hero Header with Blur Backdrop -->
+  <div class="glass-card overflow-hidden relative border border-slate-700/80">
+    <!-- Blurred Backdrop Background -->
+    <div *ngIf="book.screen" 
+         class="absolute inset-0 bg-cover bg-center opacity-15 filter blur-3xl scale-125 pointer-events-none"
+         [style.background-image]="'url(' + getCorrectBase64(book.screen) + ')'">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian/90 to-transparent pointer-events-none"></div>
 
-  <mat-card-subtitle>
-    {{ book.author }}
-  </mat-card-subtitle>
+    <div class="relative z-10 p-6 lg:p-8 flex flex-col md:flex-row gap-8 items-start">
+      <!-- Book Cover Image -->
+      <div class="w-44 lg:w-56 h-64 lg:h-80 rounded-2xl bg-slate-900 overflow-hidden border border-slate-700 shadow-2xl flex-shrink-0 relative group">
+        <img *ngIf="book.screen" 
+             [src]="getCorrectBase64(book.screen)" 
+             [alt]="book.title"
+             class="w-full h-full object-cover">
+        
+        <div *ngIf="!book.screen" 
+             class="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-slate-800 to-slate-900 text-center">
+          <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <span class="font-serif text-lg font-bold text-pearl">{{ book.title }}</span>
+        </div>
 
-  <mat-card-content>
-    {{ book.description }}
-  </mat-card-content>
-</mat-card>
+        <span class="absolute bottom-3 right-3 badge-gold bg-slate-950/80 backdrop-blur-md">
+          {{ book.category || 'General' }}
+        </span>
+      </div>
+
+      <!-- Metadata & Info -->
+      <div class="flex-1 space-y-4">
+        <!-- Top Action Bar -->
+        <div class="flex items-center justify-between gap-4">
+          <button (click)="goBack()" class="ghost-btn text-xs">
+            &larr; Back to Catalog
+          </button>
+
+          <div class="flex items-center gap-2">
+            <button (click)="toggleFavorite()" 
+                    [class]="book.isFavorite ? 'bg-rose-500/20 border-rose-500/40 text-rose-400' : 'ghost-btn'" 
+                    class="ghost-btn text-xs flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" 
+                   [class]="book.isFavorite ? 'w-4 h-4 fill-rose-500 text-rose-500' : 'w-4 h-4 stroke-current fill-none'" 
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              <span>{{ book.isFavorite ? 'Favorited' : 'Favorite' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Title & Author -->
+        <div>
+          <h1 class="font-serif text-3xl lg:text-5xl font-bold text-pearl tracking-tight leading-tight">
+            {{ book.title }}
+          </h1>
+          <p class="text-base text-amber-400 font-sans font-medium mt-1">
+            Author: <span class="text-pearl font-semibold">{{ book.author }}</span>
+          </p>
+        </div>
+
+        <!-- Status Badges & Rating -->
+        <div class="flex flex-wrap items-center gap-3 pt-1">
+          <span [class]="book.progress >= 100 ? 'badge-emerald text-sm py-1 px-3' : (book.progress > 0 ? 'badge-gold text-sm py-1 px-3' : 'badge-slate text-sm py-1 px-3')">
+            {{ book.progress >= 100 ? 'Completed' : (book.progress > 0 ? 'In Progress' : 'Not Started') }}
+          </span>
+
+          <span class="text-xs text-slate-400 flex items-center gap-1 bg-slate-900/60 border border-slate-800 px-3 py-1 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span class="font-bold text-pearl">{{ book.rating || '4.8' }}</span> Rating
+          </span>
+
+          <span class="text-xs text-slate-400 bg-slate-900/60 border border-slate-800 px-3 py-1 rounded-full">
+            {{ book.pages }} Total Pages
+          </span>
+        </div>
+
+        <!-- Description Snippet -->
+        <p class="text-sm text-slate-300 leading-relaxed pt-2">
+          {{ book.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Reading Progress Control Studio -->
+  <div class="glass-card p-6 lg:p-8 space-y-6">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div>
+        <h2 class="font-serif text-2xl font-bold text-pearl flex items-center gap-2">
+          Interactive Progress Tracker
+          <span class="text-xs font-sans badge-gold">{{ book.progress }}%</span>
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">Adjust reading progress percentage or page count to recalculate stats.</p>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-2">
+        <button (click)="quickAddProgress(10)" class="ghost-btn text-xs py-1.5 px-3">
+          +10%
+        </button>
+        <button (click)="quickAddProgress(25)" class="ghost-btn text-xs py-1.5 px-3">
+          +25%
+        </button>
+        <button (click)="markAsComplete()" class="gold-btn text-xs py-1.5 px-4">
+          Mark 100% Complete
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Range Slider & Page Inputs -->
+    <div class="space-y-4 pt-2">
+      <!-- Progress Bar Graphic -->
+      <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-800 shadow-inner">
+        <div class="h-full rounded-full transition-all duration-300"
+             [class]="book.progress >= 100 ? 'bg-emerald-400' : 'bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300'"
+             [style.width.%]="book.progress">
+        </div>
+      </div>
+
+      <!-- Slider Input -->
+      <div class="flex items-center gap-4">
+        <span class="text-xs text-slate-400 font-semibold w-8">0%</span>
+        <input type="range" 
+               min="0" 
+               max="100" 
+               [ngModel]="book.progress" 
+               (ngModelChange)="onProgressSliderChange($event)"
+               class="w-full accent-amber-500 bg-slate-900 h-2 rounded-lg cursor-pointer">
+        <span class="text-xs text-slate-400 font-semibold w-10 text-right">100%</span>
+      </div>
+
+      <!-- Page Counter Control -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+          <div>
+            <span class="block text-xs text-slate-400">Pages Read</span>
+            <span class="font-serif text-2xl font-bold text-pearl">{{ pagesReadInput }} / {{ book.pages }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="number" 
+                   min="0" 
+                   [max]="book.pages"
+                   [(ngModel)]="pagesReadInput" 
+                   (ngModelChange)="onPagesReadInputChange($event)"
+                   class="glass-input text-xs w-20 text-center py-1">
+          </div>
+        </div>
+
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+          <div>
+            <span class="block text-xs text-slate-400">Pages Remaining</span>
+            <span class="font-serif text-2xl font-bold text-amber-400">{{ book.pages - pagesReadInput }}</span>
+          </div>
+          <div class="text-right text-xs text-slate-400">
+            <span>Est. {{ Math.ceil((book.pages - pagesReadInput) / 30) }} hrs left</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabbed Reader Studio: Overview & Notes -->
+  <div class="glass-card p-6 lg:p-8 space-y-6">
+    <!-- Tab Nav Header -->
+    <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+      <button (click)="activeTab = 'overview'" 
+              [class]="activeTab === 'overview' ? 'text-amber-400 border-b-2 border-amber-400 font-bold' : 'text-slate-400 hover:text-pearl'" 
+              class="px-4 py-2 text-sm font-sans transition-colors">
+        Book Overview
+      </button>
+      <button (click)="activeTab = 'notes'" 
+              [class]="activeTab === 'notes' ? 'text-amber-400 border-b-2 border-amber-400 font-bold' : 'text-slate-400 hover:text-pearl'" 
+              class="px-4 py-2 text-sm font-sans transition-colors flex items-center gap-1.5">
+        <span>Reader Notes & Quotes</span>
+        <span class="badge-gold text-[10px]">{{ book.notes?.length || 0 }}</span>
+      </button>
+    </div>
+
+    <!-- Tab 1: Overview -->
+    <div *ngIf="activeTab === 'overview'" class="space-y-4 animate-fade-in">
+      <h3 class="font-serif text-xl font-bold text-pearl">Synopsis</h3>
+      <p class="text-slate-300 leading-relaxed text-sm">
+        {{ book.description }}
+      </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+        <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800">
+          <span class="block text-[10px] uppercase text-slate-400">Category</span>
+          <span class="font-semibold text-pearl text-sm">{{ book.category || 'General' }}</span>
+        </div>
+        <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800">
+          <span class="block text-[10px] uppercase text-slate-400">Total Pages</span>
+          <span class="font-semibold text-pearl text-sm">{{ book.pages }}</span>
+        </div>
+        <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800">
+          <span class="block text-[10px] uppercase text-slate-400">Rating</span>
+          <span class="font-semibold text-amber-400 text-sm">★ {{ book.rating || '4.8' }}</span>
+        </div>
+        <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800">
+          <span class="block text-[10px] uppercase text-slate-400">Last Read</span>
+          <span class="font-semibold text-pearl text-sm">{{ book.lastReadDate || 'Today' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Reader Notes & Quotes -->
+    <div *ngIf="activeTab === 'notes'" class="space-y-6 animate-fade-in">
+      <!-- Add Note Input -->
+      <div class="space-y-3">
+        <label class="block text-xs font-semibold text-slate-300">Add Chapter Note, Key Quote, or Reading Thought</label>
+        <div class="flex gap-2">
+          <input type="text" 
+                 [(ngModel)]="newNoteText" 
+                 (keyup.enter)="addNote()"
+                 placeholder="Type your note or quote here..." 
+                 class="glass-input flex-1 text-sm">
+          <button (click)="addNote()" class="gold-btn text-xs whitespace-nowrap">Save Note</button>
+        </div>
+      </div>
+
+      <!-- Notes List -->
+      <div class="space-y-3">
+        <div *ngFor="let note of book.notes; let i = index" 
+             class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex items-start justify-between gap-4 group">
+          <div class="flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+              {{ i + 1 }}
+            </span>
+            <p class="text-sm text-pearl leading-relaxed">{{ note }}</p>
+          </div>
+          <button (click)="removeNote(i)" class="text-slate-500 hover:text-rose-400 text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+            &times;
+          </button>
+        </div>
+
+        <div *ngIf="!book.notes || book.notes.length === 0" class="text-center py-8 text-slate-400 text-xs">
+          No reader notes added yet. Use the box above to store your key takeaways!
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

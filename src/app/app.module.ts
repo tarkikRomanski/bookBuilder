@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 
 import { BookListComponent } from './book-list/book-list.component';
@@ -20,6 +21,7 @@ import { BookShowComponent } from './book-show/book-show.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
     MatCardModule,
     MatListModule,
     MatButtonModule

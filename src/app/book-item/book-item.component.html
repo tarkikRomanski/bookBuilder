@@ -1,17 +1,99 @@
-<mat-card>
-  <img mat-card-md-image [src]="getCorrectBase64(book.screen)" [alt]="book.title">
+<div (click)="onCardClick()" 
+     class="glass-card glass-card-hover p-5 flex flex-col justify-between h-full group relative">
 
-  <mat-card-title>
-    {{ book.title }}
-  </mat-card-title>
+  <!-- Top Image / Cover Area -->
+  <div class="relative w-full h-48 rounded-xl bg-slate-900 overflow-hidden mb-4 border border-slate-800 shadow-inner">
+    <!-- Base64 Cover Image -->
+    <img *ngIf="book.screen" 
+         [src]="getCorrectBase64(book.screen)" 
+         [alt]="book.title"
+         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+    
+    <!-- Fallback Graphic if no image -->
+    <div *ngIf="!book.screen" 
+         class="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-b from-slate-800 to-slate-900 text-center">
+      <div class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+      <span class="font-serif text-sm font-bold text-pearl line-clamp-2">{{ book.title }}</span>
+    </div>
 
-  <mat-card-subtitle>
-    {{ book.author }}
-  </mat-card-subtitle>
+    <!-- Category Tag Pill -->
+    <div class="absolute top-3 left-3">
+      <span class="badge-gold bg-slate-950/80 backdrop-blur-md border border-amber-500/30 text-[10px]">
+        {{ book.category || 'General' }}
+      </span>
+    </div>
 
-  <mat-card-content>
-    {{ book.description }}
-  </mat-card-content>
+    <!-- Favorite Heart Button -->
+    <button (click)="onFavoriteClick($event)" 
+            class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-950/70 backdrop-blur-md border border-slate-700/80 flex items-center justify-center text-slate-300 hover:text-rose-400 hover:border-rose-400/50 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" 
+           [class]="book.isFavorite ? 'w-4 h-4 fill-rose-500 text-rose-500' : 'w-4 h-4 fill-none stroke-current'" 
+           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+    </button>
+  </div>
 
-  <button mat-button (click)="giveId.emit(book.uid)" color="primary">Open</button>
-</mat-card>
+  <!-- Book Header Metadata -->
+  <div class="space-y-1.5 mb-4">
+    <div class="flex items-start justify-between gap-2">
+      <h3 class="font-serif text-xl font-bold text-pearl line-clamp-1 group-hover:text-amber-400 transition-colors">
+        {{ book.title }}
+      </h3>
+    </div>
+    
+    <p class="text-xs font-medium text-amber-500/90 flex items-center gap-1">
+      <span>By</span>
+      <span class="text-slate-300 font-semibold">{{ book.author }}</span>
+    </p>
+
+    <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed pt-1">
+      {{ book.description }}
+    </p>
+  </div>
+
+  <!-- Progress Bar & Actions Footer -->
+  <div class="space-y-3 pt-3 border-t border-slate-800/80">
+    <!-- Progress Indicator -->
+    <div>
+      <div class="flex items-center justify-between text-xs mb-1.5">
+        <span class="text-slate-400 flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {{ book.pages }} Pages
+        </span>
+
+        <span [class]="book.progress >= 100 ? 'text-emerald-400 font-bold' : (book.progress > 0 ? 'text-amber-400 font-bold' : 'text-slate-500')">
+          {{ book.progress >= 100 ? 'Completed' : (book.progress + '% Read') }}
+        </span>
+      </div>
+
+      <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-slate-800">
+        <div class="h-full rounded-full transition-all duration-500"
+             [class]="book.progress >= 100 ? 'bg-emerald-400' : 'bg-gradient-to-r from-amber-500 to-amber-300'"
+             [style.width.%]="book.progress"></div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center justify-between gap-2 pt-1">
+      <button (click)="onCardClick()" 
+              class="gold-btn text-xs py-1.5 px-3 flex-1 justify-center">
+        <span>Open Reader</span>
+      </button>
+
+      <button *ngIf="book.progress < 100" 
+              (click)="onQuickProgressClick($event)" 
+              title="Quick Add 10% Progress" 
+              class="ghost-btn text-xs py-1.5 px-2.5 hover:text-amber-300">
+        +10%
+      </button>
+    </div>
+  </div>
+
+</div>
