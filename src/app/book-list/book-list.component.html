@@ -1,141 +1,139 @@
 <div class="space-y-8">
 
-  <!-- Bento Grid Showcase Banner -->
-  <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
-    <!-- Bento Item 1: Overall Progress & Reading Goal -->
-    <div class="glass-card p-6 flex flex-col justify-between relative overflow-hidden group">
-      <div class="absolute -right-6 -top-6 w-28 h-28 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all"></div>
-      
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">2026 Reading Challenge</span>
-        <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
+  <!-- Streamlined Reading Progress Banner -->
+  <section class="flex flex-col md:flex-row gap-5 items-stretch">
+    <!-- Card 1: Integrated Library Progress & Metrics -->
+    <div class="flex-1 md:w-7/12 glass-card p-6 flex flex-col justify-between">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-serif text-lg font-bold text-pearl flex items-center gap-2">
+          <span>2026 Reading Progress</span>
+        </h2>
+        <span class="badge-gold font-sans text-xs">{{ completedBooksCount }} of {{ totalBooks }} Completed</span>
       </div>
 
       <div>
-        <div class="flex items-baseline gap-2 mb-2">
-          <span class="font-serif text-4xl font-bold text-pearl">{{ averageProgress }}%</span>
-          <span class="text-xs text-slate-400">Average Library Completion</span>
+        <div class="flex items-baseline gap-3 mb-2">
+          <span class="font-serif text-3xl font-bold text-pearl">{{ averageProgress }}%</span>
+          <span class="text-xs text-slate-400 font-sans">Average Catalog Completion</span>
         </div>
 
         <!-- Progress Bar -->
-        <div class="w-full bg-slate-900/80 rounded-full h-2 overflow-hidden border border-slate-800">
-          <div class="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full transition-all duration-700"
+        <div class="w-full bg-slate-900/90 rounded-full h-2 overflow-hidden border border-slate-800">
+          <div class="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 rounded-full transition-all duration-700"
                [style.width.%]="averageProgress"></div>
         </div>
 
-        <div class="flex items-center justify-between text-xs text-slate-400 mt-3">
-          <span>{{ totalPagesRead }} Pages Read</span>
-          <span>{{ completedBooksCount }} / {{ totalBooks }} Completed</span>
+        <!-- Inline Metric Details -->
+        <div class="flex flex-wrap items-center justify-between text-xs text-slate-300 mt-4 pt-3 border-t border-slate-800/60 gap-2">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span>{{ totalPagesRead }} Pages Read</span>
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>{{ inProgressBooksCount }} Currently Reading</span>
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            <span>{{ totalBooks }} Total Titles</span>
+          </span>
         </div>
       </div>
     </div>
 
-    <!-- Bento Item 2: Active Reading Quickjump -->
+    <!-- Card 2: Active Reading Quickjump -->
     <div *ngIf="activeReadingBook" 
          (click)="processBookById(activeReadingBook.uid)" 
-         class="glass-card glass-card-hover p-6 flex flex-col justify-between relative">
+         class="md:w-5/12 glass-card glass-card-hover p-6 flex flex-col justify-between cursor-pointer">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Currently Reading</span>
-        <span class="badge-emerald">{{ activeReadingBook.progress }}% Complete</span>
+        <span class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Active Book</span>
+        </span>
+        <span class="badge-emerald text-xs">{{ activeReadingBook.progress }}% Complete</span>
       </div>
 
-      <div class="flex items-center gap-4">
-        <div class="w-14 h-18 rounded-lg bg-slate-900 border border-slate-700 overflow-hidden flex-shrink-0 shadow-md">
+      <div class="flex items-center gap-4 my-auto">
+        <div class="w-16 h-22 rounded-lg bg-slate-950 border border-slate-700 overflow-hidden flex-shrink-0 shadow-lg relative p-1">
           <img [src]="getCorrectBase64(activeReadingBook.screen)" 
                [alt]="activeReadingBook.title"
-               class="w-full h-full object-cover">
+               class="w-full h-full object-contain rounded">
         </div>
         <div class="min-w-0 flex-1">
-          <h3 class="font-serif text-lg font-bold text-pearl truncate group-hover:text-amber-300 transition-colors">
+          <h3 class="font-serif text-lg font-bold text-pearl truncate hover:text-amber-300 transition-colors">
             {{ activeReadingBook.title }}
           </h3>
-          <p class="text-xs text-slate-400 truncate">{{ activeReadingBook.author }}</p>
-          <span class="inline-block mt-2 text-xs text-amber-400 font-semibold hover:underline">Continue Reading &rarr;</span>
+          <p class="text-xs text-slate-400 truncate mt-0.5">{{ activeReadingBook.author }}</p>
+          <div class="mt-3 flex items-center gap-1 text-xs text-amber-400 font-semibold hover:underline">
+            <span>Continue Reading</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- Bento Item 3: Quick Stats & Collection Metrics -->
-    <div class="glass-card p-6 flex flex-col justify-between">
-      <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Catalog Overview</span>
-        <span class="badge-gold">Studio Mode</span>
+  <!-- Control Bar: Primary CTA, Filter Tabs, Search & Sorting -->
+  <section class="glass-card p-5 space-y-4">
+    <!-- Top Level Control Header: Filter Tabs + Add Book CTA -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+      <!-- Category Filter Tabs -->
+      <div class="flex items-center gap-1.5 bg-slate-950/70 p-1.5 rounded-xl border border-slate-800/80 overflow-x-auto">
+        <button (click)="activeTab = 'all'" 
+                [class]="activeTab === 'all' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold shadow-sm' : 'text-slate-400 hover:text-pearl border border-transparent'" 
+                class="px-3.5 py-1.5 rounded-lg text-xs font-sans transition-all whitespace-nowrap cursor-pointer">
+          All ({{ totalBooks }})
+        </button>
+        <button (click)="activeTab = 'reading'" 
+                [class]="activeTab === 'reading' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold shadow-sm' : 'text-slate-400 hover:text-pearl border border-transparent'" 
+                class="px-3.5 py-1.5 rounded-lg text-xs font-sans transition-all whitespace-nowrap cursor-pointer">
+          Reading ({{ inProgressBooksCount }})
+        </button>
+        <button (click)="activeTab = 'completed'" 
+                [class]="activeTab === 'completed' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold shadow-sm' : 'text-slate-400 hover:text-pearl border border-transparent'" 
+                class="px-3.5 py-1.5 rounded-lg text-xs font-sans transition-all whitespace-nowrap cursor-pointer">
+          Completed ({{ completedBooksCount }})
+        </button>
+        <button (click)="activeTab = 'favorites'" 
+                [class]="activeTab === 'favorites' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold shadow-sm' : 'text-slate-400 hover:text-pearl border border-transparent'" 
+                class="px-3.5 py-1.5 rounded-lg text-xs font-sans transition-all whitespace-nowrap cursor-pointer">
+          Favorites
+        </button>
       </div>
 
-      <div class="grid grid-cols-3 gap-2 py-2 text-center">
-        <div class="bg-slate-900/40 rounded-xl p-2.5 border border-slate-800">
-          <span class="block font-serif text-2xl font-bold text-pearl">{{ totalBooks }}</span>
-          <span class="text-[10px] text-slate-400 uppercase tracking-wide">Total</span>
-        </div>
-        <div class="bg-slate-900/40 rounded-xl p-2.5 border border-slate-800">
-          <span class="block font-serif text-2xl font-bold text-amber-400">{{ inProgressBooksCount }}</span>
-          <span class="text-[10px] text-slate-400 uppercase tracking-wide">Reading</span>
-        </div>
-        <div class="bg-slate-900/40 rounded-xl p-2.5 border border-slate-800">
-          <span class="block font-serif text-2xl font-bold text-emerald-400">{{ completedBooksCount }}</span>
-          <span class="text-[10px] text-slate-400 uppercase tracking-wide">Finished</span>
-        </div>
-      </div>
-
-      <button (click)="openAddBookModal()" class="gold-btn text-xs py-2 w-full justify-center mt-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      <!-- Prominent Primary CTA Button -->
+      <button (click)="openAddBookModal()" class="gold-btn text-xs py-2 px-4 shadow-md flex items-center justify-center gap-2 font-bold flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
         </svg>
         <span>Add New Book</span>
       </button>
     </div>
-  </section>
 
-  <!-- Filter, Search & Sorting Controls -->
-  <section class="glass-card p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-    <!-- Category Tabs -->
-    <div class="flex items-center gap-1 bg-slate-950/50 p-1 rounded-xl border border-slate-800/80 overflow-x-auto w-full md:w-auto">
-      <button (click)="activeTab = 'all'" 
-              [class]="activeTab === 'all' ? 'bg-amber-500 text-slate-950 font-bold shadow-md' : 'text-slate-400 hover:text-pearl'" 
-              class="px-3.5 py-1.5 rounded-lg text-xs font-sans transition-all whitespace-nowrap">
-        All ({{ totalBooks }})
-      </button>
-      <button (click)="activeTab = 'reading'" 
-              [class]="activeTab === 'reading' ? 'bg-amber-500 text-slate-950 font-bold shadow-md' : 'text-slate-400 hover:text-pearl'" 
-              class="px-3.5 py-1.5 rounded-lg text-xs font-sans transition-all whitespace-nowrap">
-        Reading ({{ inProgressBooksCount }})
-      </button>
-      <button (click)="activeTab = 'completed'" 
-              [class]="activeTab === 'completed' ? 'bg-amber-500 text-slate-950 font-bold shadow-md' : 'text-slate-400 hover:text-pearl'" 
-              class="px-3.5 py-1.5 rounded-lg text-xs font-sans transition-all whitespace-nowrap">
-        Completed ({{ completedBooksCount }})
-      </button>
-      <button (click)="activeTab = 'favorites'" 
-              [class]="activeTab === 'favorites' ? 'bg-amber-500 text-slate-950 font-bold shadow-md' : 'text-slate-400 hover:text-pearl'" 
-              class="px-3.5 py-1.5 rounded-lg text-xs font-sans transition-all whitespace-nowrap">
-        Favorites
-      </button>
-    </div>
-
-    <!-- Search Input & Sort Selector -->
-    <div class="flex items-center gap-3 w-full md:w-auto">
+    <!-- Search Input & Sort Selector Toolbar -->
+    <div class="flex items-center gap-3 pt-1">
       <!-- Search Field -->
-      <div class="relative flex-1 md:w-64">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="relative flex-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400/80 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
         <input type="text" 
                [(ngModel)]="searchQuery" 
-               placeholder="Search title or author..." 
-               class="glass-input pl-9 pr-8 py-1.5 text-xs w-full">
+               placeholder="Search title or author ( / )..." 
+               aria-label="Search title or author"
+               class="glass-input pl-10 pr-8 py-2 text-xs w-full">
         <button *ngIf="searchQuery" 
                 (click)="searchQuery = ''" 
-                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-pearl">
+                aria-label="Clear search input"
+                class="w-6 h-6 flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-pearl text-base rounded-md hover:bg-slate-800/60 transition-all">
           &times;
         </button>
       </div>
 
       <!-- Sort Selector -->
-      <select [(ngModel)]="sortBy" class="glass-input py-1.5 px-3 text-xs cursor-pointer">
+      <select [(ngModel)]="sortBy" aria-label="Sort books by criteria" class="glass-input py-2 px-3 text-xs cursor-pointer min-w-[130px]">
         <option value="progress">Sort: Progress</option>
         <option value="title">Sort: Title</option>
         <option value="pages">Sort: Pages</option>
@@ -144,7 +142,7 @@
   </section>
 
   <!-- Book Grid Display -->
-  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
     <app-book-item *ngFor="let book of filteredBooks" 
                    [book]="book" 
                    (giveId)="processBookById($event)"
@@ -161,16 +159,22 @@
       </svg>
     </div>
     <h3 class="font-serif text-xl font-bold text-pearl mb-1">No Books Match Criteria</h3>
-    <p class="text-xs text-slate-400 mb-4">Try clearing your search query or selecting a different tab filter.</p>
+    <p class="text-xs text-slate-400 mb-4">Try clearing your search query or selecting a different filter tab.</p>
     <button (click)="searchQuery = ''; activeTab = 'all'" class="ghost-btn text-xs mx-auto">Reset Filters</button>
   </div>
 
   <!-- Add Book Modal Dialog -->
-  <div *ngIf="showAddModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-md animate-fade-in">
-    <div class="glass-card p-6 w-full max-w-lg shadow-2xl border border-slate-700 relative">
-      <button (click)="closeAddBookModal()" class="absolute top-4 right-4 text-slate-400 hover:text-pearl text-xl">&times;</button>
+  <div *ngIf="showAddModal" 
+       (click)="closeAddBookModal()" 
+       class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-md animate-fade-in">
+    <div (click)="$event.stopPropagation()" 
+         role="dialog" 
+         aria-modal="true" 
+         aria-labelledby="modal-title" 
+         class="glass-card p-6 w-full max-w-lg shadow-2xl border border-slate-700 relative">
+      <button (click)="closeAddBookModal()" aria-label="Close add book modal" class="w-7 h-7 flex items-center justify-center absolute top-4 right-4 text-slate-400 hover:text-pearl text-xl rounded-md hover:bg-slate-800/60 transition-all">&times;</button>
       
-      <h2 class="font-serif text-2xl font-bold text-pearl mb-1">Add New Book to Library</h2>
+      <h2 id="modal-title" class="font-serif text-2xl font-bold text-pearl mb-1">Add New Book to Library</h2>
       <p class="text-xs text-slate-400 mb-6">Expand your literary collection and track your reading progress.</p>
 
       <form (ngSubmit)="saveNewBook()" class="space-y-4">
@@ -192,7 +196,7 @@
 
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Total Page Count</label>
-          <input type="number" [(ngModel)]="newPages" name="pages" placeholder="e.g. 280" class="glass-input w-full text-sm">
+          <input type="number" [(ngModel)]="newPages" name="pages" min="1" placeholder="e.g. 280" class="glass-input w-full text-sm">
         </div>
 
         <div>
@@ -209,3 +213,4 @@
   </div>
 
 </div>
+

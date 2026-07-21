@@ -173,7 +173,7 @@ img, svg, video, picture {
   border: 1px solid var(--border-glass);
   border-radius: 12px;
   color: var(--text-pearl);
-  padding: 10px 16px;
+  padding: 8px 16px;
   outline: none;
   transition: all 0.2s ease;
   font-family: var(--font-sans);
@@ -195,7 +195,7 @@ img, svg, video, picture {
   color: #0b0f19;
   font-weight: 700;
   border-radius: 12px;
-  padding: 10px 20px;
+  padding: 8px 20px;
   border: none;
   cursor: pointer;
   display: inline-flex;
@@ -220,7 +220,7 @@ img, svg, video, picture {
   color: var(--text-slate);
   border: 1px solid var(--border-glass);
   border-radius: 12px;
-  padding: 10px 18px;
+  padding: 8px 16px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
@@ -240,7 +240,7 @@ img, svg, video, picture {
   background: rgba(245, 158, 11, 0.15);
   color: var(--accent-gold-light);
   border: 1px solid rgba(245, 158, 11, 0.3);
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -251,7 +251,7 @@ img, svg, video, picture {
   background: rgba(16, 185, 129, 0.15);
   color: #34d399;
   border: 1px solid rgba(16, 185, 129, 0.3);
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -261,7 +261,7 @@ img, svg, video, picture {
   background: rgba(148, 163, 184, 0.12);
   color: var(--text-slate);
   border: 1px solid rgba(148, 163, 184, 0.2);
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 500;
@@ -275,6 +275,20 @@ img, svg, video, picture {
   border: none !important;
 }
 
+/* Accessible Focus Indicators & Text Balancing */
+:focus-visible {
+  outline: 2px solid var(--accent-gold) !important;
+  outline-offset: 2px !important;
+}
+
+h1, h2, h3, h4, .font-serif {
+  text-wrap: balance;
+}
+
+p, article {
+  text-wrap: pretty;
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -283,4 +297,20 @@ img, svg, video, picture {
 
 .animate-fade-in {
   animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

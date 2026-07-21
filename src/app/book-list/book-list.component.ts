@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { BookModel } from '../../models/book.model';
 
 @Component({
@@ -8,12 +8,30 @@ import { BookModel } from '../../models/book.model';
 })
 export class BookListComponent {
   @Output() showBook = new EventEmitter<BookModel>();
+  @ViewChild('searchInput') searchInputRef?: ElementRef<HTMLInputElement>;
 
   searchQuery = '';
   activeTab: 'all' | 'reading' | 'completed' | 'favorites' = 'all';
   sortBy: 'progress' | 'title' | 'pages' = 'progress';
 
   showAddModal = false;
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.showAddModal) {
+      this.closeAddBookModal();
+      return;
+    }
+    if (event.key === '/' && !this.showAddModal) {
+      const activeEl = document.activeElement;
+      const isInput = activeEl instanceof HTMLInputElement || activeEl instanceof HTMLTextAreaElement;
+      if (!isInput) {
+        event.preventDefault();
+        const searchEl = document.querySelector<HTMLInputElement>('input[aria-label="Search title or author"]');
+        searchEl?.focus();
+      }
+    }
+  }
 
   // New book form fields
   newTitle = '';
